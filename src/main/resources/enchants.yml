@@ -1,0 +1,16 @@
+tokenator:
+  enabled: true
+  display: "&6&lTokenator"
+  max-level: 500
+  required-level: 0
+
+  chance: 0.5
+  level-multiplier: 0.005
+  min-token: 10
+  max-token: 100
+
+efficiency:
+  enabled: true
+  display: "&c&lEfficiency"
+  max-level: 20
+  required-level: 0

@@ -1,0 +1,5 @@
+name: RobotPrison
+version: '${project.version}'
+main: fr.robotv2.robotprison.RobotPrison
+api-version: 1.18
+authors: [ Robotv2 ]

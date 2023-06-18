@@ -31,8 +31,7 @@ public abstract class PrisonEnchant {
     private final int requiredLevel;
 
     private PrisonEnchant(ConfigurationSection section) {
-        Objects.requireNonNull(section);
-        this.section = section;
+        this.section = Objects.requireNonNull(section);
         this.id = section.getName().toLowerCase();
         this.enabled = section.getBoolean("enabled");
         this.display = Objects.requireNonNull(section.getString("display"));

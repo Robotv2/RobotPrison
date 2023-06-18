@@ -44,7 +44,7 @@ public class SellProfile {
 
     //<<- STATIC METHOD ->>
 
-    static List<SellProfile> profiles = Collections.synchronizedList(new ArrayList<>());
+    final static List<SellProfile> profiles = Collections.synchronizedList(new ArrayList<>());
 
     public static void registerProfile(SellProfile profile) {
         profiles.add(profile);
@@ -54,7 +54,14 @@ public class SellProfile {
     public static SellProfile getSellProfile(Player player) {
         return profiles.stream()
                 .filter(profile -> player.hasPermission(profile.getPermission()))
-                .max((o1, o2) -> o2.priority > o1.priority ? -1 : 1)
+                .max((profile1, profile2) -> {
+
+                    if(profile2.priority == profile1.priority) {
+                        return 0;
+                    }
+
+                    return profile1.priority > profile2.priority ? 1 : -1;
+                })
                 .orElse(null);
     }
 }

@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -31,8 +30,7 @@ public class PickaxeListeners extends RobotListener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
 
-        final Action action = event.getAction();
-        if(!action.isRightClick()) {
+        if(!event.getAction().isRightClick()) {
             return;
         }
 

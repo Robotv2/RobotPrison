@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RobotListener implements Listener {
 
     private final JavaPlugin instance;
+
     public RobotListener(JavaPlugin plugin) {
         this.instance = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);

@@ -29,7 +29,10 @@ public class CurrencyValueChangeEvent extends Event implements Cancellable {
     }
 
     public enum CurrencyChangeReason {
-        UNKNOWN, ENCHANT, MINE, COMMAND;
+        UNKNOWN,
+        ENCHANT,
+        MINE,
+        COMMAND;
     }
 
     public static HandlerList getHandlerList() {

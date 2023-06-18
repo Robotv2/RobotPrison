@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -35,7 +34,8 @@ public class PlayerListener extends RobotListener {
 
         //Checking and registering every prison item in his inventory.
         Arrays.stream(event.getPlayer().getInventory().getContents())
-                .filter(PrisonItem::isPrisonItem).forEach(PrisonItem::toPrisonItem);
+                .filter(PrisonItem::isPrisonItem)
+                .forEach(PrisonItem::toPrisonItem);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -44,11 +44,10 @@ public class PlayerListener extends RobotListener {
         final Player player = event.getPlayer();
 
         //Save player data to db.
-        PrisonPlayer.getPrisonPlayer(event.getPlayer()).save();
+        PrisonPlayer.getPrisonPlayer(player).save();
 
         //Save player prison items.
-        final PlayerInventory inventory = player.getInventory();
-        Arrays.stream(inventory.getContents())
+        Arrays.stream(player.getInventory().getContents())
                 .filter(PrisonItem::isPrisonItem)
                 .map(PrisonItem::toPrisonItem)
                 .forEach(PrisonItem::saveItem);

@@ -62,11 +62,11 @@ public class PickaxeEnchantGui extends Gui {
         meta.setDisplayName(enchant.getDisplay());
         final List<String> lore =
                 Stream.of(
-                        "&8&l==--==--==",
+                        "",
                         "&fNiveau actuel: &b" + item.getEnchantLevel(enchant),
                         "&fNiveau requis: &b" + enchant.getRequiredLevel(),
-                        "&8&l==--==--==",
-                        "Clic-droit pour monter d'un niveau.")
+                        "",
+                        "&eClic-droit pour monter d'un niveau.")
                 .map(ColorUtil::colorize).collect(Collectors.toList());
         meta.setLore(lore);
 

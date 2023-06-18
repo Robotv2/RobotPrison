@@ -3,6 +3,7 @@ package fr.robotv2.robotprison.enchant;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +30,7 @@ public final class PrisonEnchantManager {
     }
 
     public Collection<PrisonEnchant> getEnchants() {
-        return enchants.values();
+        return Collections.unmodifiableCollection(this.enchants.values());
     }
 
     public List<String> getEnchantsIds() {

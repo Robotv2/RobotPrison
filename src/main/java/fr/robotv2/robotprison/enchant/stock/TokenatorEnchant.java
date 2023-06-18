@@ -23,9 +23,7 @@ public final class TokenatorEnchant extends PrisonEnchant {
 
     @Override
     public void execute(PrisonPlayer player, int level, ThreadLocalRandom random) {
-        double value = random.nextDouble(minToken, maxToken);
-        value = NumberUtil.roundDecimal(value, 2);
-
+        final double value = NumberUtil.roundDecimal(random.nextDouble(minToken, maxToken), 2);
         player.setCurrency(Currency.TOKEN, player.getCurrency(Currency.TOKEN) + value, CurrencyValueChangeEvent.CurrencyChangeReason.ENCHANT);
         player.getPlayer().sendMessage(ChatColor.GREEN + "You've just won " + value + " token(s).");
     }

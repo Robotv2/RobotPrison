@@ -6,7 +6,7 @@
 
     <groupId>fr.robotv2</groupId>
     <artifactId>RobotPrison</artifactId>
-    <version>1.0</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
 
     <name>RobotPrison</name>

@@ -73,6 +73,10 @@ public final class RobotPrison extends JavaPlugin {
 
     // <- LOADERS -->
 
+    private void setupDependencies() {
+        VaultAPI.initialize(getServer());
+    }
+
     private void setupListeners() {
         new RobotListener(this);
         new PlayerListener(this);
@@ -101,10 +105,6 @@ public final class RobotPrison extends JavaPlugin {
         getEnchantManager().clearEnchants();
         getEnchantManager().registerPrisonEnchant(new TokenatorEnchant());
         getEnchantManager().registerPrisonEnchant(new EfficiencyEnchant());
-    }
-
-    private void setupDependencies() {
-        VaultAPI.initialize(getServer());
     }
 
     // <- GETTERS -->

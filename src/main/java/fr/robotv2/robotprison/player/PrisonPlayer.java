@@ -41,7 +41,7 @@ public final class PrisonPlayer {
     }
 
     public boolean hasEnoughCurrency(Currency currency, double value) {
-        return getCurrency(currency) > value;
+        return getCurrency(currency) >= value;
     }
 
     public double getCurrency(Currency currency) {

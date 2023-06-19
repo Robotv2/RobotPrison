@@ -5,7 +5,7 @@ import fr.robotv2.robotprison.enchant.PrisonItem;
 import fr.robotv2.robotprison.player.PrisonPlayer;
 import fr.robotv2.robotprison.profile.SellProfile;
 import fr.robotv2.robotprison.ui.GuiManager;
-import fr.robotv2.robotprison.ui.stock.PickaxeEnchantGui;
+import fr.robotv2.robotprison.ui.impl.PickaxeEnchantGui;
 import fr.robotv2.robotprison.util.dependencies.VaultAPI;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -48,9 +48,10 @@ public class PickaxeListeners extends RobotListener {
 
         final Player player = event.getPlayer();
         final Block block = event.getBlock();
+        final ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
         final PrisonPlayer prisonPlayer = PrisonPlayer.getPrisonPlayer(player);
-        final PrisonItem prisonItem = PrisonItem.toPrisonItem(player.getInventory().getItemInMainHand());
+        final PrisonItem prisonItem = PrisonItem.toPrisonItem(itemInHand);
 
         if(prisonPlayer == null || prisonItem == null) {
             return;
@@ -65,7 +66,7 @@ public class PickaxeListeners extends RobotListener {
                 .forEach(enchant -> enchant.execute(prisonPlayer, prisonItem.getEnchantLevel(enchant), random));
 
         prisonItem.incrementBlockMined();
-        prisonItem.actualizeItem();
+        prisonItem.actualizeItem(itemInHand);
 
         if(prisonPlayer.hasAutoSell()) {
             final SellProfile profile = SellProfile.getSellProfile(player);

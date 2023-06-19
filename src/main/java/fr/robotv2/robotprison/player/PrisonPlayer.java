@@ -26,7 +26,7 @@ public final class PrisonPlayer {
     @DatabaseField(columnName = "currencies", dataType = DataType.SERIALIZABLE)
     private final HashMap<Currency, Double> currencies = new HashMap<>();
 
-    public PrisonPlayer() {}
+    public PrisonPlayer() { }
 
     public PrisonPlayer(UUID playerUUID) {
         this.playerUUID = playerUUID;

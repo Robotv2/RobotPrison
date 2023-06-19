@@ -34,7 +34,9 @@ public final class PrisonEnchantManager {
     }
 
     public List<String> getEnchantsIds() {
-        return getEnchants().stream().map(PrisonEnchant::getId).collect(Collectors.toList());
+        return getEnchants().stream()
+                .map(PrisonEnchant::getId)
+                .collect(Collectors.toList());
     }
 
     public void registerPrisonEnchant(PrisonEnchant enchant) {

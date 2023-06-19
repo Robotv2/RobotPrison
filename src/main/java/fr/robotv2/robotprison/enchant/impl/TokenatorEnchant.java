@@ -1,4 +1,4 @@
-package fr.robotv2.robotprison.enchant.stock;
+package fr.robotv2.robotprison.enchant.impl;
 
 import fr.robotv2.robotprison.enchant.PrisonEnchant;
 import fr.robotv2.robotprison.events.CurrencyValueChangeEvent;

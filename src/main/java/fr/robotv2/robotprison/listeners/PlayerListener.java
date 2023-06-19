@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -46,10 +47,12 @@ public class PlayerListener extends RobotListener {
         //Save player data to db.
         PrisonPlayer.getPrisonPlayer(player).save();
 
+
         //Save player prison items.
-        Arrays.stream(player.getInventory().getContents())
-                .filter(PrisonItem::isPrisonItem)
-                .map(PrisonItem::toPrisonItem)
-                .forEach(PrisonItem::saveItem);
+        for(ItemStack content : player.getInventory().getContents()) {
+            if(PrisonItem.isPrisonItem(content)) {
+                PrisonItem.toPrisonItem(content).saveItem(content);
+            }
+        }
     }
 }

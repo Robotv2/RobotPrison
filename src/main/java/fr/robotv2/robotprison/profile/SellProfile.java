@@ -6,16 +6,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SellProfile {
 
     private final String permission;
     private final int priority;
 
-    private final Map<Material, Double> sells = new ConcurrentHashMap<>();
+    private final Map<Material, Double> sells = new HashMap<>();
 
     public SellProfile(String permission, int priority) {
         this.permission = permission;
@@ -54,14 +55,7 @@ public class SellProfile {
     public static SellProfile getSellProfile(Player player) {
         return profiles.stream()
                 .filter(profile -> player.hasPermission(profile.getPermission()))
-                .max((profile1, profile2) -> {
-
-                    if(profile2.priority == profile1.priority) {
-                        return 0;
-                    }
-
-                    return profile1.priority > profile2.priority ? 1 : -1;
-                })
+                .max(Comparator.comparingInt(profile -> profile.priority))
                 .orElse(null);
     }
 }

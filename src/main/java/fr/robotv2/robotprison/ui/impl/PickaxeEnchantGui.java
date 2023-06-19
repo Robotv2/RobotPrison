@@ -1,4 +1,4 @@
-package fr.robotv2.robotprison.ui.stock;
+package fr.robotv2.robotprison.ui.impl;
 
 import fr.robotv2.robotprison.RobotPrison;
 import fr.robotv2.robotprison.enchant.PrisonEnchant;
@@ -20,6 +20,12 @@ import java.util.stream.Stream;
 
 public class PickaxeEnchantGui extends Gui {
 
+    private final RobotPrison instance;
+
+    public PickaxeEnchantGui(RobotPrison instance) {
+        this.instance = instance;
+    }
+
     @Override
     public String getName(Player player, Object... objects) {
         return "Enchantment's menu.";
@@ -33,15 +39,17 @@ public class PickaxeEnchantGui extends Gui {
     @Override
     public void contents(Player player, Inventory inv, Object... objects) {
         final ItemStack empty = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+
         for(int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, empty);
         }
 
         final PrisonItem item = (PrisonItem) objects[0];
-        final int count = 0;
+        int index = 0;
 
-        for(PrisonEnchant enchant : RobotPrison.get().getEnchantManager().getEnchants()) {
-            inv.setItem(count, getBookItem(item, enchant));
+        for(PrisonEnchant enchant : instance.getEnchantManager().getEnchants()) {
+            inv.setItem(index, getBookItem(item, enchant));
+            ++index;
         }
     }
 

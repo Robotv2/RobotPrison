@@ -64,7 +64,7 @@ public class RobotPrisonCommand {
 
         final PrisonItem prisonItem = PrisonItem.toPrisonItem(item);
         prisonItem.setEnchantLevel(enchant.getId(), level);
-        prisonItem.actualizeItem();
+        prisonItem.actualizeItem(item);
 
         actor.reply(ChatColor.GREEN + "The item has been successfully enchanted.");
     }

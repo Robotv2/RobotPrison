@@ -14,3 +14,9 @@ efficiency:
   display: "&c&lEfficiency"
   max-level: 20
   required-level: 0
+
+haste:
+  enabled: true
+  display: "&a&lHaste"
+  max-level: 20
+  required-level: 0

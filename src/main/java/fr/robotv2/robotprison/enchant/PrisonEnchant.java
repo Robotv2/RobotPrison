@@ -97,4 +97,11 @@ public abstract class PrisonEnchant {
     public void onUnEquip(PrisonPlayer player, PrisonItem item, int level, ThreadLocalRandom random) {}
 
     public abstract EnumSet<EnchantType> getType();
+
+    @Override
+    public boolean equals(Object otherEnchant) {
+        if(otherEnchant == this) return true;
+        if(!(otherEnchant instanceof PrisonEnchant enchant)) return false;
+        return Objects.equals(enchant.getId(), this.getId());
+    }
 }

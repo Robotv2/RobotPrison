@@ -15,10 +15,11 @@ public class FileUtil {
             return file;
         }
 
+        if(!file.getParentFile().exists()) {
+            file.mkdirs();
+        }
+
         try {
-            if(!file.getParentFile().exists()) {
-                file.mkdirs();
-            }
             file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();

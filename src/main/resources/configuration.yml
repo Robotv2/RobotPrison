@@ -1,0 +1,9 @@
+pickaxe-meta:
+  name: "&aPrison's Pickaxe &8| &7Level %pickaxe_level%"
+  lore:
+    - "&8"
+    - "&8Level: &7%pickaxe_level%"
+    - "&8Exp: &7%pickaxe_exp%"
+    - "&8Block Mined: &7%pickaxe_block_mined%"
+    - "&8"
+    - "&aClic-droit pour ouvrir le menu."

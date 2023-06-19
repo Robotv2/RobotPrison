@@ -3,6 +3,8 @@ package fr.robotv2.robotprison.enchant;
 import fr.robotv2.robotprison.RobotPrison;
 import fr.robotv2.robotprison.SpecialKeys;
 import fr.robotv2.robotprison.util.ColorUtil;
+import fr.robotv2.robotprison.util.PlaceholderUtil;
+import fr.robotv2.robotprison.util.config.ConfigAPI;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -12,8 +14,6 @@ import org.json.simple.JSONValue;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PrisonItem {
 
@@ -33,6 +33,7 @@ public class PrisonItem {
 
         final PrisonItem prisonItem = new PrisonItem(uuid, item);
         items.put(uuid, prisonItem);
+
         return prisonItem;
     }
 
@@ -47,7 +48,7 @@ public class PrisonItem {
         SpecialKeys.BLOCK_MINED.setValue(item, 0);
 
         final PrisonItem prisonItem = PrisonItem.toPrisonItem(item);
-        prisonItem.actualizeItem();
+        prisonItem.actualizeItem(item);
         return prisonItem;
     }
 
@@ -56,7 +57,7 @@ public class PrisonItem {
     }
 
     private final UUID itemUUID;
-    private final ItemStack item;
+    private final ItemStack from;
 
     private int level;
     private double exp;
@@ -65,8 +66,10 @@ public class PrisonItem {
     private final Map<PrisonEnchant, Integer> enchants = new ConcurrentHashMap<>();
 
     public PrisonItem(final UUID itemUUID, final ItemStack item) {
+
         this.itemUUID = itemUUID;
-        this.item = item;
+        this.from = item;
+
         this.level = SpecialKeys.ITEM_LEVEL.getValue(item, Integer.class, 0);
         this.exp = SpecialKeys.ITEM_EXP.getValue(item, Double.class,0D);
         this.blockMined = SpecialKeys.BLOCK_MINED.getValue(item, Integer.class, 0);
@@ -84,7 +87,7 @@ public class PrisonItem {
             }
         }
 
-        actualizeItem();
+        actualizeItem(item);
     }
 
     public UUID getItemUniqueId() {
@@ -92,8 +95,11 @@ public class PrisonItem {
     }
 
     public ItemStack getItem() {
-        return item;
+        final ItemStack stack = from.clone();
+        actualizeItem(stack);
+        return stack;
     }
+
 
     public int getLevel() {
         return level;
@@ -137,7 +143,7 @@ public class PrisonItem {
         enchants.put(enchant, level);
     }
 
-    public void saveItem() {
+    public void saveItem(ItemStack item) {
         SpecialKeys.ITEM_LEVEL.setValue(item, level);
         SpecialKeys.ITEM_EXP.setValue(item, exp);
         SpecialKeys.BLOCK_MINED.setValue(item, blockMined);
@@ -147,27 +153,24 @@ public class PrisonItem {
         SpecialKeys.PRISON_ENCHANT.setValue(item, json.toJSONString());
     }
 
-    public void actualizeItem() {
-        this.item.editMeta(meta -> {
-            meta.setLore(this.getDefaultLore());
+    public void actualizeItem(ItemStack item) {
+        item.editMeta(meta -> {
+
             meta.setUnbreakable(true);
             meta.addEnchant(Enchantment.ARROW_FIRE, 1, false);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
-        });
-    }
 
-    private List<String> getDefaultLore() {
-        final List<String> lines = Stream.of(
-                "&8&l==============",
-                "&7LEVEL: " + level,
-                "&7EXP: " + exp,
-                "&7BLOCK MINED: " + blockMined,
-                "&8&l=============="
-        ).map(ColorUtil::colorize).collect(Collectors.toList());
-        for(PrisonEnchant enchant : getEnchants()) {
-            lines.add(ColorUtil.colorize(enchant.getDisplay() + ": " + getEnchantLevel(enchant)));
-        }
-        lines.add(ColorUtil.colorize("&8&l=============="));
-        return lines;
+            String name = ConfigAPI.getConfig("configuration").get().getString("pickaxe-meta.name");
+            name = ColorUtil.colorize(name);
+            name = PlaceholderUtil.PRISON_ITEM_PLACEHOLDER.apply(this, name);
+            meta.setDisplayName(name);
+
+            final List<String> lore = ConfigAPI.getConfig("configuration").get()
+                    .getStringList("pickaxe-meta.lore").stream()
+                    .map(ColorUtil::colorize)
+                    .map(input -> PlaceholderUtil.PRISON_ITEM_PLACEHOLDER.apply(this, input))
+                    .toList();
+            meta.setLore(lore);
+        });
     }
 }

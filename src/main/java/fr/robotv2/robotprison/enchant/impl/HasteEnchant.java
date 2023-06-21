@@ -22,7 +22,7 @@ public class HasteEnchant extends PrisonEnchant {
         if(player == null) {
             return;
         }
-        final PotionEffect effect = new PotionEffect(PotionEffectType.FAST_DIGGING, 9999, level, false, false, false);
+        final PotionEffect effect = new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, level, true, false, false);
         player.addPotionEffect(effect);
     }
 

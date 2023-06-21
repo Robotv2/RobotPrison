@@ -2,8 +2,11 @@ package fr.robotv2.robotprison;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import fr.mrmicky.fastinv.FastInv;
+import fr.mrmicky.fastinv.FastInvManager;
 import fr.robotv2.robotprison.commands.CurrencyPrisonCommand;
 import fr.robotv2.robotprison.commands.RobotPrisonCommand;
+import fr.robotv2.robotprison.commands.SellProfileCommand;
 import fr.robotv2.robotprison.enchant.PrisonEnchant;
 import fr.robotv2.robotprison.enchant.PrisonEnchantManager;
 import fr.robotv2.robotprison.enchant.impl.EfficiencyEnchant;
@@ -11,13 +14,14 @@ import fr.robotv2.robotprison.enchant.impl.HasteEnchant;
 import fr.robotv2.robotprison.enchant.impl.TokenatorEnchant;
 import fr.robotv2.robotprison.listeners.PickaxeListeners;
 import fr.robotv2.robotprison.listeners.PlayerListener;
-import fr.robotv2.robotprison.listeners.RobotListener;
 import fr.robotv2.robotprison.player.PrisonPlayer;
-import fr.robotv2.robotprison.ui.GuiManager;
-import fr.robotv2.robotprison.ui.impl.PickaxeEnchantGui;
+import fr.robotv2.robotprison.profile.SellManager;
+import fr.robotv2.robotprison.profile.SellProfile;
 import fr.robotv2.robotprison.util.FileUtil;
 import fr.robotv2.robotprison.util.config.ConfigAPI;
 import fr.robotv2.robotprison.util.dependencies.VaultAPI;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
@@ -32,16 +36,16 @@ public final class RobotPrison extends JavaPlugin {
         return JavaPlugin.getPlugin(RobotPrison.class);
     }
 
-    private GuiManager guiManager;
     private PrisonEnchantManager prisonEnchantManager;
     private DataManager dataManager;
+    private SellManager sellManager;
 
     @Override
     public void onEnable() {
 
         this.prisonEnchantManager = new PrisonEnchantManager();
         this.dataManager = new DataManager();
-        this.guiManager = new GuiManager(this);
+        this.sellManager = new SellManager();
 
         this.setupDependencies();
         this.setupFiles();
@@ -49,6 +53,7 @@ public final class RobotPrison extends JavaPlugin {
         this.setupListeners();
         this.setupCommands();
         this.setupGuiManager();
+        this.registerProfiles();
 
         try {
             final File file = FileUtil.createFile(getDataFolder().getPath(), "database.db");
@@ -69,9 +74,12 @@ public final class RobotPrison extends JavaPlugin {
     }
 
     public void onReload() {
+        ConfigAPI.getConfig("profiles").reload();
         ConfigAPI.getConfig("configuration").reload();
         ConfigAPI.getConfig("enchants").reload();
+
         this.setupDefaultEnchants();
+        this.registerProfiles();
     }
 
     // <- LOADERS -->
@@ -81,9 +89,8 @@ public final class RobotPrison extends JavaPlugin {
     }
 
     private void setupListeners() {
-        new RobotListener(this);
-        new PlayerListener(this);
-        new PickaxeListeners(this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new PickaxeListeners(this), this);
     }
 
     private void setupCommands() {
@@ -97,12 +104,14 @@ public final class RobotPrison extends JavaPlugin {
 
         handler.register(new RobotPrisonCommand());
         handler.register(new CurrencyPrisonCommand());
+        handler.register(new SellProfileCommand(this));
     }
 
     private void setupFiles() {
         ConfigAPI.init(this);
         ConfigAPI.getConfig("enchants").setup();
         ConfigAPI.getConfig("configuration").setup();
+        ConfigAPI.getConfig("profiles").setup();
     }
 
     private void setupDefaultEnchants() {
@@ -113,8 +122,41 @@ public final class RobotPrison extends JavaPlugin {
     }
 
     private void setupGuiManager() {
-        getServer().getPluginManager().registerEvents(this.guiManager, this);
-        GuiManager.addMenu(new PickaxeEnchantGui(this));
+        FastInvManager.register(this);
+    }
+
+    private void registerProfiles() {
+
+        SellProfile.clearProfiles();
+
+        final ConfigurationSection section = ConfigAPI.getConfig("profiles").get().getConfigurationSection("profiles");
+
+        if(section == null) {
+            getLogger().warning("No Profile were found in the plugin. Please check again the 'profiles.yml' file.");
+            return;
+        }
+
+        for(String key : section.getKeys(false)) {
+
+            final ConfigurationSection keySection = section.getConfigurationSection(key);
+            final SellProfile profile = new SellProfile(keySection);
+            SellProfile.registerProfile(profile);
+
+            final ConfigurationSection materialSection = keySection.getConfigurationSection("materials");
+
+            if(materialSection == null) {
+                continue;
+            }
+
+            for(String stringMaterial : materialSection.getKeys(false)) {
+                final Material material = Material.matchMaterial(stringMaterial);
+                if(material == null) continue;
+                final double value = materialSection.getDouble(stringMaterial);
+                if(value != 0) {
+                    profile.addMaterial(material, value);
+                }
+            }
+        }
     }
 
     // <- GETTERS -->
@@ -124,10 +166,14 @@ public final class RobotPrison extends JavaPlugin {
     }
 
     public PrisonEnchantManager getEnchantManager() {
-        return prisonEnchantManager;
+        return this.prisonEnchantManager;
     }
 
     public DataManager getDataManager() {
-        return dataManager;
+        return this.dataManager;
+    }
+
+    public SellManager getSellManager() {
+        return this.sellManager;
     }
 }

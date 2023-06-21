@@ -1,4 +1,4 @@
-package fr.robotv2.robotprison.player;
+package fr.robotv2.robotprison.enums;
 
 public enum Currency {
     TOKEN, GEM;

@@ -1,0 +1,7 @@
+profiles:
+  beginner:
+    priority: 1
+    permission: robotprison.profile.beginner
+    materials:
+      COBBLESTONE: 1
+

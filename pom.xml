@@ -6,7 +6,7 @@
 
     <groupId>fr.robotv2</groupId>
     <artifactId>RobotPrison</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
 
     <name>RobotPrison</name>
@@ -121,6 +121,12 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.Robotv2</groupId>
+            <artifactId>FastInv</artifactId>
+            <version>84311938ff</version>
         </dependency>
     </dependencies>
 </project>

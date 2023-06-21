@@ -5,6 +5,7 @@ import fr.robotv2.robotprison.SpecialKeys;
 import fr.robotv2.robotprison.util.ColorUtil;
 import fr.robotv2.robotprison.util.PlaceholderUtil;
 import fr.robotv2.robotprison.util.config.ConfigAPI;
+import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,7 @@ public class PrisonItem {
         return prisonItem;
     }
 
-    public static boolean isPrisonItem(final ItemStack item) {
+    public static boolean isPrisonItem(final ItemStack item)  {
         return SpecialKeys.ITEM_UUID.hasValue(item);
     }
 
@@ -165,11 +166,23 @@ public class PrisonItem {
             name = PlaceholderUtil.PRISON_ITEM_PLACEHOLDER.apply(this, name);
             meta.setDisplayName(name);
 
-            final List<String> lore = ConfigAPI.getConfig("configuration").get()
-                    .getStringList("pickaxe-meta.lore").stream()
-                    .map(ColorUtil::colorize)
-                    .map(input -> PlaceholderUtil.PRISON_ITEM_PLACEHOLDER.apply(this, input))
-                    .toList();
+            final ArrayList<String> lore = new ArrayList<>();
+            for(String line : ConfigAPI.getConfig("configuration").get().getStringList("pickaxe-meta.lore")) {
+
+                line = ColorUtil.colorize(line);
+                line = PlaceholderUtil.PRISON_ITEM_PLACEHOLDER.apply(this, line);
+
+                if(line.contains("%enchant_id%")) {
+                    for(PrisonEnchant enchant : getEnchants()) {
+                        lore.add(line
+                                .replace("%enchant_id%", enchant.getDisplay())
+                                .replace("%enchant_level%", String.valueOf(getEnchantLevel(enchant)))
+                        );
+                    }
+                } else {
+                    lore.add(line);
+                }
+            }
             meta.setLore(lore);
         });
     }

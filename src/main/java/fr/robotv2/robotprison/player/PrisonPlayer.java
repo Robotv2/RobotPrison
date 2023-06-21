@@ -4,15 +4,17 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import fr.robotv2.robotprison.RobotPrison;
+import fr.robotv2.robotprison.enums.Currency;
 import fr.robotv2.robotprison.events.CurrencyValueChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @DatabaseTable(tableName = "player-data")
 public final class PrisonPlayer {
@@ -26,6 +28,9 @@ public final class PrisonPlayer {
     @DatabaseField(columnName = "currencies", dataType = DataType.SERIALIZABLE)
     private final HashMap<Currency, Double> currencies = new HashMap<>();
 
+    private final AutoSellRecord autoSellRecord = new AutoSellRecord();
+    private boolean dirty = false;
+
     public PrisonPlayer() { }
 
     public PrisonPlayer(UUID playerUUID) {
@@ -36,8 +41,9 @@ public final class PrisonPlayer {
         return playerUUID;
     }
 
+    @NotNull
     public Player getPlayer() {
-        return Bukkit.getPlayer(playerUUID);
+        return Objects.requireNonNull(Bukkit.getPlayer(playerUUID));
     }
 
     public boolean hasEnoughCurrency(Currency currency, double value) {
@@ -55,6 +61,7 @@ public final class PrisonPlayer {
 
         if(!event.isCancelled()) {
             this.currencies.put(currency, event.getTo());
+            markDirty();
         }
     }
 
@@ -70,19 +77,32 @@ public final class PrisonPlayer {
 
     public void setAutoSell(boolean value) {
         this.autoSell = value;
+        markDirty();
     }
 
-    /**
-     * Save player to database.
-     */
+    public AutoSellRecord getAutoSellRecord() {
+        return this.autoSellRecord;
+    }
+
+    //DIRTY
+
+    public boolean isDirty() {
+        return this.dirty;
+    }
+
+    public void markDirty() {
+        this.dirty = true;
+    }
+
     public void save() {
-        RobotPrison.get().getDataManager().savePrisonPlayer(this);
+        if(isDirty()) {
+            RobotPrison.get().getDataManager().savePrisonPlayer(this);
+        }
     }
-
 
     // <<- STATIC METHOD ->>
 
-    static Map<UUID, PrisonPlayer> players = new ConcurrentHashMap<>();
+    static Map<UUID, PrisonPlayer> players = new HashMap<>();
 
     public static void registerPlayer(PrisonPlayer player) {
         players.put(player.playerUUID, player);

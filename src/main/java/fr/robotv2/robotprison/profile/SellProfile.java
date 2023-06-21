@@ -1,6 +1,7 @@
 package fr.robotv2.robotprison.profile;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +18,13 @@ public class SellProfile {
     private final int priority;
 
     private final Map<Material, Double> sells = new HashMap<>();
+
+    public SellProfile(ConfigurationSection section) {
+        this(
+                section.getString("permission"),
+                section.getInt("priority")
+        );
+    }
 
     public SellProfile(String permission, int priority) {
         this.permission = permission;
@@ -51,11 +59,15 @@ public class SellProfile {
         profiles.add(profile);
     }
 
+    public static void clearProfiles() {
+        profiles.clear();
+    }
+
     @Nullable
     public static SellProfile getSellProfile(Player player) {
         return profiles.stream()
                 .filter(profile -> player.hasPermission(profile.getPermission()))
-                .max(Comparator.comparingInt(profile -> profile.priority))
+                .max(Comparator.comparingInt(SellProfile::getPriority))
                 .orElse(null);
     }
 }

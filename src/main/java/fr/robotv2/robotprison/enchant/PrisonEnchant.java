@@ -4,6 +4,7 @@ import fr.robotv2.robotprison.RobotPrison;
 import fr.robotv2.robotprison.player.PrisonPlayer;
 import fr.robotv2.robotprison.util.ColorUtil;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.Objects;
@@ -12,7 +13,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class PrisonEnchant {
 
     public enum EnchantType {
-        HOLD, MINE;
+        HOLD,
+        MINE,
+        ;
     }
 
     private final ConfigurationSection section;
@@ -30,7 +33,7 @@ public abstract class PrisonEnchant {
 
     private final int requiredLevel;
 
-    private PrisonEnchant(ConfigurationSection section) {
+    private PrisonEnchant(@NotNull ConfigurationSection section) {
         this.section = Objects.requireNonNull(section);
         this.id = section.getName().toLowerCase();
         this.enabled = section.getBoolean("enabled");

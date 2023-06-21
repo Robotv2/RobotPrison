@@ -1,6 +1,6 @@
 package fr.robotv2.robotprison.events;
 
-import fr.robotv2.robotprison.player.Currency;
+import fr.robotv2.robotprison.enums.Currency;
 import fr.robotv2.robotprison.player.PrisonPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

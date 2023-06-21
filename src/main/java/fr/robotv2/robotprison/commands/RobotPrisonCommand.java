@@ -3,6 +3,7 @@ package fr.robotv2.robotprison.commands;
 import fr.robotv2.robotprison.RobotPrison;
 import fr.robotv2.robotprison.enchant.PrisonEnchant;
 import fr.robotv2.robotprison.enchant.PrisonItem;
+import fr.robotv2.robotprison.player.PrisonPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -67,5 +68,22 @@ public class RobotPrisonCommand {
         prisonItem.actualizeItem(item);
 
         actor.reply(ChatColor.GREEN + "The item has been successfully enchanted.");
+    }
+
+    @Subcommand("autosell")
+    @Usage("autosell")
+    @CommandPermission("robotprison.command.autosell")
+    public void onAutoSell(BukkitCommandActor actor) {
+
+        final Player player = actor.requirePlayer();
+        final PrisonPlayer prisonPlayer = PrisonPlayer.getPrisonPlayer(player);
+
+        prisonPlayer.setAutoSell(!prisonPlayer.hasAutoSell());
+
+        if(prisonPlayer.hasAutoSell()) {
+            actor.reply(ChatColor.GREEN + "Vous venez d'activer le mode AUTOSELL.");
+        } else {
+            actor.reply(ChatColor.RED + "Vous venez de désactiver l'AUTOSELL.");
+        }
     }
 }

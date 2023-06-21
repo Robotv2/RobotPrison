@@ -2,7 +2,7 @@ package fr.robotv2.robotprison.enchant.impl;
 
 import fr.robotv2.robotprison.enchant.PrisonEnchant;
 import fr.robotv2.robotprison.events.CurrencyValueChangeEvent;
-import fr.robotv2.robotprison.player.Currency;
+import fr.robotv2.robotprison.enums.Currency;
 import fr.robotv2.robotprison.player.PrisonPlayer;
 import fr.robotv2.robotprison.util.NumberUtil;
 import org.bukkit.ChatColor;

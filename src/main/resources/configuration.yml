@@ -6,4 +6,6 @@ pickaxe-meta:
     - "&8Exp: &7%pickaxe_exp%"
     - "&8Block Mined: &7%pickaxe_block_mined%"
     - "&8"
+    - "&8%enchant_id%: &7%enchant_level%"
+    - "&8"
     - "&aClic-droit pour ouvrir le menu."

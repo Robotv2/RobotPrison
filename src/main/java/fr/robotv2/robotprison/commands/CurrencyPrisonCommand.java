@@ -1,7 +1,7 @@
 package fr.robotv2.robotprison.commands;
 
 import fr.robotv2.robotprison.events.CurrencyValueChangeEvent;
-import fr.robotv2.robotprison.player.Currency;
+import fr.robotv2.robotprison.enums.Currency;
 import fr.robotv2.robotprison.player.PrisonPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
